@@ -17,9 +17,6 @@ Kullanılan kütüphaneler:
    pip install -r requirements.txt
 2. Ardından:
    python main.py
-
-Google Colab kullanıyorsanız bu dosyanın içeriğini bir hücreye yapıştırıp
-çalıştırmanız yeterlidir.
 """
 
 import numpy as np
