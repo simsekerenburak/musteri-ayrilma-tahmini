@@ -1,77 +1,101 @@
-# Müşteri Ayrılma Tahmini - Makine Öğrenmesi Ara Ödevi
+# Müşteri Ayrılma Tahmini - Makine Öğrenmesi Final Ödevi
 
-Bu proje, Türkiye Yapay Zeka Akademisi Makine Öğrenmesi ara ödevi kapsamında hazırlanmıştır.
+Bu proje, **Türkiye Yapay Zeka Akademisi Makine Öğrenmesi Final Ödevi** kapsamında hazırlanmıştır.
 
 ## Projenin Amacı
 
-Amaç, müşteri ayrılma (`churn`) tahmini üzerinden temel bir makine öğrenmesi sınıflandırma akışını uygulamaktır.
+Bu projede amaç, müşteri bilgilerini kullanarak müşterinin hizmetten ayrılıp ayrılmayacağını tahmin eden bir makine öğrenmesi modeli geliştirmektir.
 
-Projede şu adımlar uygulanmıştır:
+Problem bir **ikili sınıflandırma (Binary Classification)** problemidir.
 
-- Python ile örnek müşteri veri seti oluşturma
-- Temel veri inceleme
-- Eksik değer kontrolü
-- Eksik değerleri doldurma
-- Kategorik değişkenlere One-Hot Encoding uygulama
-- Sayısal değişkenleri ölçekleme
-- Yeni öznitelik üretme
-- Train / validation / test ayırma
-- Logistic Regression modeli eğitme
-- KNN modeli eğitme
-- Validation sonuçlarını karşılaştırma
-- En iyi modeli test setinde değerlendirme
-- Confusion matrix, accuracy, precision, recall ve F1-score hesaplama
+Hedef değişken:
 
-## Kullanılan Teknolojiler
-
-- Python
-- pandas
-- numpy
-- scikit-learn
-
-## Nasıl Çalıştırılır?
-
-Önce gerekli paketleri yükleyin:
-
-```bash
-pip install -r requirements.txt
-```
-
-Ardından Python dosyasını çalıştırın:
-
-```bash
-python main.py
-```
-
-Google Colab kullanıyorsanız `main.py` dosyasındaki kodu bir hücreye yapıştırıp doğrudan çalıştırabilirsiniz.
+- `churn = 0` → Müşteri ayrılmadı
+- `churn = 1` → Müşteri ayrıldı
 
 ## Veri Seti
 
-Projede harici bir veri dosyası kullanılmamıştır. Kod içinde 300 satırlık örnek bir müşteri veri seti oluşturulmaktadır.
+Projede Python kullanılarak **1500 satır ve 12 sütundan oluşan** örnek bir müşteri veri seti oluşturulmuştur. 
 
-Örnek değişkenler:
+Veri setinde aşağıdaki değişkenler bulunmaktadır:
 
-- yaş
-- gelir
-- abonelik süresi
-- destek talebi sayısı
-- şehir
-- üyelik tipi
-- churn
+- `customer_id`
+- `age`
+- `tenure_months`
+- `monthly_charges`
+- `total_charges`
+- `contract_type`
+- `internet_service`
+- `payment_method`
+- `support_calls`
+- `num_services`
+- `autopay`
+- `churn`
 
-Ayrıca iki yeni öznitelik oluşturulmuştur:
+Veri ön işleme adımlarının uygulanabilmesi amacıyla bazı sütunlara eksik değerler eklenmiştir.
 
-- `destek_talebi_var_mi`
-- `abonelik_yili`
+## Uygulanan Adımlar
 
-## Model Karşılaştırması
+Projede uçtan uca makine öğrenmesi süreci uygulanmıştır:
 
-Projede Logistic Regression ve KNN modelleri eğitilmektedir.
+1. Veri setinin oluşturulması
+2. Veri setinin temel olarak incelenmesi
+3. Hedef değişkenin belirlenmesi
+4. Eksik değer kontrolü
+5. Eksik değerlerin doldurulması
+6. Kategorik değişkenlere One-Hot Encoding uygulanması
+7. Aykırı değer analizi
+8. Sayısal değişkenlerin StandardScaler ile ölçeklenmesi
+9. Öznitelik mühendisliği
+10. Korelasyon analizi ile öznitelik seçimi
+11. Train, validation ve test kümelerinin oluşturulması
+12. Farklı makine öğrenmesi modellerinin eğitilmesi
+13. Validation sonuçlarının karşılaştırılması
+14. GridSearchCV ile hiperparametre optimizasyonu
+15. En iyi modelin test verisi üzerinde değerlendirilmesi
+16. Sonuçların yorumlanması
+17. Feature Importance ile model açıklanabilirliği
 
-Modeller validation setindeki F1-score değerlerine göre karşılaştırılır. Daha yüksek F1-score alan model seçilir ve test setinde son kez değerlendirilir.
+## Öznitelik Mühendisliği
 
-## Sonuç
+Projede iki yeni öznitelik oluşturulmuştur:
 
-Kod çalıştırıldığında validation sonuçları ve seçilen model ekrana yazdırılır. Ardından test seti için confusion matrix, accuracy, precision, recall ve F1-score değerleri gösterilir.
+- `charge_per_service`
+  - Müşterinin kullandığı hizmet başına ödediği ortalama ücreti ifade eder.
 
-Sonuçlar, kullanılan rastgele veri üretimine bağlı olmakla birlikte `random_state` ve `numpy seed` kullanıldığı için tekrar çalıştırmalarda tutarlı sonuçlar elde edilir.
+- `support_call_rate`
+  - Müşterinin abonelik süresine göre destek çağrısı oranını ifade eder.
+
+## Kullanılan Modeller
+
+Üç farklı sınıflandırma modeli eğitilmiştir:
+
+- Logistic Regression
+- Decision Tree
+- Random Forest
+
+Modeller validation verisi üzerinde aşağıdaki metriklerle karşılaştırılmıştır:
+
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+
+Model seçiminde temel olarak **F1 Score** kullanılmıştır.
+
+## Hiperparametre Optimizasyonu
+
+Validation sonucunda en başarılı model için `GridSearchCV` kullanılarak hiperparametre optimizasyonu gerçekleştirilmiştir.
+
+Grid Search sırasında **5 katlı çapraz doğrulama (5-Fold Cross Validation)** uygulanmıştır.
+
+Validation sonuçlarına göre en iyi model **Decision Tree** olmuştur. 
+
+Bulunan en iyi parametreler:
+
+```python
+{
+    "max_depth": None,
+    "min_samples_leaf": 2,
+    "min_samples_split": 2
+}
